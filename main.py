@@ -171,7 +171,7 @@ def get_indicator(varcd: str, dim1: str, dim2: str, lang: str = "PT") -> dict:
     data = resp.json()
 
     # Enrich with unit/scale from metadata and a human-clickable
-    # verification link — a number is not safely quotable without these.
+    # verification link — a number is not safely quotable without these test.
     try:
         meta = _fetch_metadata(varcd, lang)
     except requests.exceptions.HTTPError:
