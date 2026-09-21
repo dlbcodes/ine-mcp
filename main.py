@@ -166,10 +166,15 @@ def get_indicator(varcd: str, dim1: str, dim2: str, lang: str = "PT") -> dict:
     Args:
         varcd: INE indicator code, e.g. "0008074" (use search_indicators
             to find one if you don't already know it).
-        dim1: Time dimension code, e.g. "S7A2015".
+        dim1: Time dimension code, e.g. "S7A2015". Accepts multiple
+            comma-separated codes in one call, e.g.
+            "S3A201112,S3A201512,S3A201912" — INE's API returns all of
+            them together, so prefer one call over several when you
+            know the periods/places up front.
         dim2: Geographic dimension code, e.g. "11A1312" for Porto, or
             "PT" for the whole country. Required — pass "PT" explicitly
             if you want the national total, rather than leaving it out.
+            Also accepts comma-separated codes, e.g. "11A1312,PT".
         lang: "PT" or "EN".
 
     Every result carries a "source" link to verify the number and a
