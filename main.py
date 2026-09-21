@@ -150,7 +150,13 @@ def resolve_dimensions(varcd: str, filters: dict[str, str], lang: str = "PT") ->
         else:
             resolved[dim_num] = matches[0]
 
-    return {"resolved": resolved, "problems": problems}
+    return {
+        "resolved": resolved,
+        "problems": problems,
+        "_debug": {
+            "dims_found": {k: len(v) for k, v in dims.items()},
+        },
+    }
 
 
 @mcp.tool()
@@ -180,9 +186,12 @@ def get_indicator(varcd: str, dim1: str, dim2: str, lang: str = "PT") -> dict:
 
     # Enrich with unit/scale from metadata and a human-clickable
     # verification link — a number is not safely quotable without these.
+    # Catch any request failure here (not just HTTPError) — the metadata
+    # payload is large and can time out under load, and that must never
+    # break the primary data fetch, which already succeeded.
     try:
         meta = _fetch_metadata(varcd, lang)
-    except requests.exceptions.HTTPError:
+    except requests.exceptions.RequestException:
         meta = {}
 
     measurement = {
