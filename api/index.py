@@ -27,4 +27,7 @@ security = TransportSecuritySettings(
     allowed_origins=[f"https://{vercel_host}"],
 )
 
-app = mcp.streamable_http_app(transport_security=security)
+app = mcp.streamable_http_app(
+    streamable_http_path="/",
+    transport_security=security,
+)

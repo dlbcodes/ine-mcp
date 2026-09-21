@@ -1,6 +1,12 @@
 {
     "rewrites": [
-        { "source": "/mcp", "destination": "/python" },
-        { "source": "/mcp/(.*)", "destination": "/python" }
+        {
+            "source": "/mcp",
+            "destination": "/python"
+        },
+        {
+            "source": "/mcp/(.*)",
+            "destination": "/python"
+        }
     ]
 }
