@@ -67,15 +67,23 @@ def get_metadata(varcd: str, lang: str = "PT") -> dict:
 
 
 def _fetch_metadata(varcd: str, lang: str = "PT") -> dict:
-    """Internal: does the actual metadata request (shared by get_metadata
-    and resolve_dimensions, so we only fetch once per call)."""
+    """Internal: does the actual metadata request (shared by get_metadata,
+    resolve_dimensions, and get_indicator, so we only fetch once per call).
+
+    INE's response shape is inconsistent ACROSS DIFFERENT INDICATORS —
+    some return a plain dict, others wrap it in a list — normalize here,
+    once, so every caller gets a dict regardless.
+    """
     url = (
         "https://www.ine.pt/ine/json_indicador/pindicaMeta.jsp"
         f"?varcd={varcd}&lang={lang}"
     )
     resp = requests.get(url, timeout=30)
     resp.raise_for_status()
-    return resp.json()
+    meta = resp.json()
+    if isinstance(meta, list):
+        meta = meta[0] if meta else {}
+    return meta
 
 
 def _parse_dimensions(meta) -> dict[str, list[dict]]:
@@ -171,7 +179,7 @@ def get_indicator(varcd: str, dim1: str, dim2: str, lang: str = "PT") -> dict:
     data = resp.json()
 
     # Enrich with unit/scale from metadata and a human-clickable
-    # verification link — a number is not safely quotable without these test.
+    # verification link — a number is not safely quotable without these.
     try:
         meta = _fetch_metadata(varcd, lang)
     except requests.exceptions.HTTPError:
