@@ -207,7 +207,8 @@ def get_indicator(varcd: str, dim1: str, dim2: str, lang: str = "PT") -> dict:
     return {
         "source": {
             "api": url,
-            "verify_url": data.get("MetaInfUrl"),
+            "note": "This exact URL reproduces the data above — open it directly to independently verify the figures.",
+            "indicator_info_page": data.get("MetaInfUrl"),
         },
         "measurement": measurement,
         "data": data,
