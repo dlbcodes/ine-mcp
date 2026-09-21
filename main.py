@@ -183,6 +183,10 @@ def get_indicator(varcd: str, dim1: str, dim2: str, lang: str = "PT") -> dict:
     resp = requests.get(url, timeout=30)
     resp.raise_for_status()
     data = resp.json()
+    # Same inconsistency we found in the metadata endpoint — INE
+    # sometimes wraps the response in a list, depending on the query.
+    if isinstance(data, list):
+        data = data[0] if data else {}
 
     # Enrich with unit/scale from metadata and a human-clickable
     # verification link — a number is not safely quotable without these.
